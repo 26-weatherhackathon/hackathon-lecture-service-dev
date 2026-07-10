@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>서비스 개발 — 심사 기준 100점, 사용자에서 역산하기 | 기상·기후 AI 활용 해커톤</title>
+<title>서비스 개발 — 사용자에서 시작하기 | 기상·기후 AI 활용 해커톤</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <style>
   :root {
@@ -52,7 +52,7 @@
   .sec-title { font-size: 42px; font-weight: 800; color: var(--white); line-height: 1.25; margin-bottom: 26px; letter-spacing: -0.02em; }
   .sec-title b { color: var(--primary); font-weight: 800; }
 
-  /* 배점 칩 */
+  /* 포인트 칩 */
   .pts-chip {
     display: inline-block; font-size: 17px; font-weight: 800; color: #fff;
     background: var(--primary); padding: 7px 18px; border-radius: 999px; margin-bottom: 18px;
@@ -98,7 +98,7 @@
   .card-desc { font-size: 17px; color: var(--sub); line-height: 1.65; letter-spacing: -0.01em; }
   .card-desc b { color: var(--white); font-weight: 700; }
 
-  /* 배점 바 */
+  /* 강조 바 */
   .score-row { display: grid; grid-template-columns: 250px 1fr 110px; align-items: center; gap: 20px; margin-bottom: 20px; }
   .score-row .s-label { font-size: 22px; font-weight: 800; color: var(--white); }
   .score-row .s-track { height: 34px; background: rgba(30,86,160,0.08); border-radius: 8px; overflow: hidden; }
@@ -148,7 +148,7 @@
     <div style="font-size:66px; font-weight:900; color:var(--white); line-height:1.2; margin-bottom:22px; letter-spacing:-0.02em;">
       <span style="color:var(--primary);">서비스 개발</span>
     </div>
-    <div style="font-size:26px; color:var(--sub); margin-bottom:52px; font-weight:600;">심사 기준 100점, <b style="color:var(--primary);">사용자에서 역산</b>하기</div>
+    <div style="font-size:26px; color:var(--sub); margin-bottom:52px; font-weight:600;"><b style="color:var(--primary);">사용자에서 시작</b>하는 서비스 개발</div>
 
     <div style="display:flex; justify-content:center; gap:14px;">
       <div style="border:1px solid var(--border); border-radius:12px; padding:14px 32px;">
@@ -188,93 +188,73 @@
   <div class="slide-num">2 / 15</div>
 </div>
 
-<!-- ==================== SLIDE 3: 심사 기준부터 ==================== -->
+<!-- ==================== SLIDE 3: 좋은 결과물 ==================== -->
 <div class="slide">
   <div class="sec-tag">시작하기 전에</div>
-  <div class="sec-title">시작은 <b>심사 기준표</b>에서 거꾸로</div>
+  <div class="sec-title">무엇이 <b>좋은 결과물</b>을 만드는가</div>
 
-  <div style="margin-top:30px;">
-    <div class="score-row">
-      <span class="s-label">실현 가능성</span>
-      <div class="s-track"><div class="s-fill" style="width:100%;"></div></div>
-      <span class="s-val">30점</span>
+  <div class="card-grid cols-2" style="margin-top:36px;">
+    <div class="card" style="border:2px solid var(--primary); background:rgba(30,86,160,0.04);">
+      <div class="card-tag">핵심 1</div>
+      <div class="card-title" style="color:var(--primary);">실제로 끝까지 동작하는가</div>
+      <div class="card-desc">화려한 아이디어보다, 완성되어 작동하는 하나가 강합니다.</div>
     </div>
-    <div class="score-row">
-      <span class="s-label">체험·참여형 설계</span>
-      <div class="s-track"><div class="s-fill" style="width:83%;"></div></div>
-      <span class="s-val">25점</span>
-    </div>
-    <div class="score-row">
-      <span class="s-label">주제 적합성</span>
-      <div class="s-track"><div class="s-fill" style="width:67%; opacity:0.75;"></div></div>
-      <span class="s-val">20점</span>
-    </div>
-    <div class="score-row">
-      <span class="s-label">아이디어 독창성</span>
-      <div class="s-track"><div class="s-fill" style="width:50%; opacity:0.55;"></div></div>
-      <span class="s-val">15점</span>
-    </div>
-    <div class="score-row">
-      <span class="s-label">학습 효과</span>
-      <div class="s-track"><div class="s-fill" style="width:33%; opacity:0.4;"></div></div>
-      <span class="s-val">10점</span>
+    <div class="card" style="border:2px solid var(--primary); background:rgba(30,86,160,0.04);">
+      <div class="card-tag">핵심 2</div>
+      <div class="card-title" style="color:var(--primary);">사용자가 직접 경험하는가</div>
+      <div class="card-desc">읽는 콘텐츠가 아니라, 조작하며 배우는 경험이어야 합니다.</div>
     </div>
   </div>
 
   <div class="highlight-box" style="margin-top:28px;">
-    <div class="hb-big">상위 두 항목만 55점 — 아이디어가 아니라 <u>만드는 방식</u>에서 갈립니다</div>
-    <div class="hb-text">오늘 강의는 이 100점을 만드는 서비스 개발 순서입니다.</div>
+    <div class="hb-big">결국 아이디어가 아니라 <u>만드는 방식</u>에서 갈립니다</div>
+    <div class="hb-text">오늘 강의는 이 두 가지를 만드는 서비스 개발 순서입니다.</div>
   </div>
 
   <div class="slide-brand">서비스 개발</div>
   <div class="slide-num">3 / 15</div>
 </div>
 
-<!-- ==================== SLIDE 4: 로드맵 = 100점 ==================== -->
+<!-- ==================== SLIDE 4: 로드맵 ==================== -->
 <div class="slide">
   <div class="sec-tag">Roadmap</div>
-  <div class="sec-title">다섯 기준이 공통으로 묻는 것 — <b>"사용자를 알고 만들었는가"</b></div>
+  <div class="sec-title">다섯 단계가 공통으로 묻는 것 — <b>"사용자를 알고 만들었는가"</b></div>
 
   <div class="flow" style="margin-top:36px;">
     <div class="flow-step">
       <div class="fs-num">1</div>
       <div class="fs-title">사용자</div>
       <div class="fs-desc">누가 쓰는지부터 안다</div>
-      <div class="fs-pts">주제 적합성 20</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">2</div>
       <div class="fs-title">문제 정의</div>
       <div class="fs-desc">불편을 한 문장 질문으로</div>
-      <div class="fs-pts">독창성 15</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">3</div>
       <div class="fs-title">핵심 경험</div>
       <div class="fs-desc">하나만, 끝까지 동작하게</div>
-      <div class="fs-pts">실현 가능성 30</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">4</div>
       <div class="fs-title">체험 설계·개발</div>
       <div class="fs-desc">읽기 말고 조작하게</div>
-      <div class="fs-pts">체험·참여 25</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">5</div>
       <div class="fs-title">검증</div>
       <div class="fs-desc">동료가 첫 사용자</div>
-      <div class="fs-pts">학습 효과 10</div>
     </div>
   </div>
 
   <div class="highlight-box" style="margin-top:40px;">
-    <div class="hb-big">다섯 단계를 순서대로 = 100점 구조 그대로</div>
-    <div class="hb-text">심사 대응을 따로 준비할 필요가 없습니다. 개발 순서 자체가 심사 기준입니다.</div>
+    <div class="hb-big">다섯 단계를 순서대로 = 완성도 있는 결과물</div>
+    <div class="hb-text">발표를 따로 준비할 필요가 없습니다. 좋은 결과물은 이 개발 순서에서 그대로 나옵니다.</div>
   </div>
 
   <div class="slide-brand">서비스 개발</div>
@@ -284,7 +264,7 @@
 <!-- ==================== SLIDE 5: 사용자 ==================== -->
 <div class="slide">
   <div class="sec-tag">STEP 1 · 사용자</div>
-  <div class="pts-chip">주제 적합성 20점</div>
+  <div class="pts-chip">누구를 위해 만드는가</div>
   <div class="sec-title">여러분의 사용자는 <b>누구입니까</b></div>
 
   <div class="lead" style="font-size:24px;">여러분이 만드는 건 웹페이지가 아니라, <b>교육 콘텐츠를 들을 한 사람의 배움 경험</b>입니다.</div>
@@ -315,7 +295,7 @@
 <!-- ==================== SLIDE 6: 지식의 저주 ==================== -->
 <div class="slide">
   <div class="sec-tag">STEP 1 · 사용자</div>
-  <div class="pts-chip">가장 흔한 감점 요인</div>
+  <div class="pts-chip">가장 흔한 함정</div>
   <div class="sec-title">함정 — <b>"내가 곧 사용자다"</b></div>
 
   <div class="lead" style="font-size:24px;">여러분은 기상 전문가입니다. 그리고 바로 그 전문성이<br><b>사용자 이해를 가로막는 가장 큰 장애물</b>입니다.</div>
@@ -377,7 +357,7 @@
 <!-- ==================== SLIDE 8: 문제 정의 ==================== -->
 <div class="slide">
   <div class="sec-tag">STEP 2 · 문제 정의</div>
-  <div class="pts-chip">아이디어 독창성 15점</div>
+  <div class="pts-chip">진짜 문제에서 나온다</div>
   <div class="sec-title">불편을 <b>한 문장의 질문</b>으로 바꾼다</div>
 
   <div class="card-grid cols-2" style="margin-top:20px; align-items:stretch;">
@@ -399,7 +379,7 @@
 
   <div class="highlight-box" style="margin-top:22px;">
     <div class="hb-big" style="font-size:24px;">진짜 인터뷰에서 나온 문제는 다른 팀이 베낄 수 없습니다</div>
-    <div class="hb-text">독창성 15점은 기발함이 아니라, 남들이 못 본 진짜 불편에서 나옵니다.</div>
+    <div class="hb-text">독창성은 기발함이 아니라, 남들이 못 본 진짜 불편에서 나옵니다.</div>
   </div>
 
   <div class="slide-brand">STEP 2 · 문제 정의</div>
@@ -409,7 +389,7 @@
 <!-- ==================== SLIDE 9: 핵심 경험 하나 ==================== -->
 <div class="slide">
   <div class="sec-tag">STEP 3 · 핵심 경험</div>
-  <div class="pts-chip">실현 가능성 30점 — 배점 1위</div>
+  <div class="pts-chip">가장 중요한 것</div>
   <div class="sec-title">해커톤의 적은 실력 부족이 아니라 <b>기능 욕심</b></div>
 
   <div class="card-grid cols-2" style="margin-top:26px;">
@@ -437,7 +417,7 @@
 <!-- ==================== SLIDE 10: 진입·조작·확인 ==================== -->
 <div class="slide">
   <div class="sec-tag">STEP 4 · 체험 설계</div>
-  <div class="pts-chip">체험·참여형 설계 25점 — 배점 2위</div>
+  <div class="pts-chip">조작해야 배운다</div>
   <div class="sec-title">조작하지 않으면 <b>배우지 않는다</b></div>
 
   <div class="flow" style="margin-top:24px;">
@@ -544,7 +524,7 @@
 <!-- ==================== SLIDE 13: 동료 검증 ==================== -->
 <div class="slide">
   <div class="sec-tag">STEP 5 · 검증</div>
-  <div class="pts-chip">학습 효과 10점 + 완성도 리허설</div>
+  <div class="pts-chip">완성도 리허설</div>
   <div class="sec-title">심사장 리허설 — <b>동료가 첫 사용자다</b></div>
 
   <div class="lead" style="font-size:23px;">심사장에서 여러분은 옆에서 설명해줄 수 없습니다.<br><b>덜 만들어졌을 때 보여주는 것</b>이 진짜 검증입니다.</div>
@@ -579,42 +559,37 @@
 <!-- ==================== SLIDE 14: 요약 ==================== -->
 <div class="slide">
   <div class="sec-tag">Summary</div>
-  <div class="sec-title">다섯 단계 = <b>100점의 구조</b></div>
+  <div class="sec-title">다섯 단계 = <b>완성도 있는 결과물</b></div>
 
   <div class="flow" style="margin-top:56px;">
     <div class="flow-step">
       <div class="fs-num">1</div>
       <div class="fs-title">사용자</div>
       <div class="fs-desc">동료 5명에게 과거 경험을 묻는다</div>
-      <div class="fs-pts">20점</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">2</div>
       <div class="fs-title">문제 정의</div>
       <div class="fs-desc">불편을 HMW 한 문장으로</div>
-      <div class="fs-pts">15점</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">3</div>
       <div class="fs-title">핵심 경험</div>
       <div class="fs-desc">1개 × 100% 완성</div>
-      <div class="fs-pts">30점</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">4</div>
       <div class="fs-title">체험·개발</div>
       <div class="fs-desc">진입·조작·확인 + 페르소나 프롬프트</div>
-      <div class="fs-pts">25점</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
       <div class="fs-num">5</div>
       <div class="fs-title">검증</div>
       <div class="fs-desc">설명 없이 동료 테스트</div>
-      <div class="fs-pts">10점</div>
     </div>
   </div>
 
