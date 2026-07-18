@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>서비스 개발 (발표용) | 기상·기후 AI 활용 해커톤</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  /* === TOKENS: 화이트 + 블루, 정부 문서 톤 === */
+  :root {
+    --primary: #1E56A0;
+    --accent: #163172;
+    --ink: #1a1a1a;
+    --sub: rgba(0,0,0,0.58);
+    --dim: rgba(0,0,0,0.4);
+    --line: rgba(0,0,0,0.12);
+    --line-b: rgba(30,86,160,0.3);
+    --tint: rgba(30,86,160,0.05);
+    --tint2: rgba(30,86,160,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body { font-family:'Pretendard',-apple-system,'Malgun Gothic',sans-serif; background:#E8E8E8; color:var(--ink); -webkit-font-smoothing:antialiased; }
+
+  /* === SLIDE FRAME === */
+  .slide {
+    width:100vw; height:100vh; height:100dvh; overflow:hidden; background:#fff;
+    padding: clamp(24px,5vh,44px) clamp(36px,6vw,84px) clamp(20px,4vh,36px);
+    display:flex; flex-direction:column; position:relative;
+  }
+  .head { display:flex; justify-content:space-between; align-items:baseline; flex:none; margin-bottom:clamp(6px,1.4vh,14px); }
+  .tag { font-size:clamp(13px,1.6vh,16px); font-weight:800; color:var(--primary); letter-spacing:0.14em; text-transform:uppercase; }
+  .no { font-size:clamp(12px,1.5vh,15px); font-weight:600; color:var(--dim); font-variant-numeric:tabular-nums; }
+  .title { flex:none; font-size:clamp(32px,6vh,50px); font-weight:900; line-height:1.22; letter-spacing:-0.02em; }
+  .title b { color:var(--primary); font-weight:900; }
+  .body { flex:1 1 auto; min-height:0; display:flex; flex-direction:column; justify-content:center; gap:clamp(10px,2.4vh,22px); padding:clamp(6px,1.6vh,16px) 0; }
+  .punch { flex:none; text-align:center; border-top:1px solid var(--line); padding-top:clamp(10px,2vh,18px);
+    font-size:clamp(19px,3.2vh,28px); font-weight:900; color:var(--primary); letter-spacing:-0.01em; word-break:keep-all; line-height:1.35; }
+  .punch small { display:block; font-size:clamp(12px,1.8vh,16px); font-weight:600; color:var(--sub); margin-top:5px; }
+
+  /* === 공통 박스 === */
+  .row { display:grid; gap:clamp(10px,1.6vw,20px); }
+  .row.c2{grid-template-columns:1fr 1fr;} .row.c3{grid-template-columns:1fr 1fr 1fr;} .row.c4{grid-template-columns:repeat(4,1fr);}
+  .box { border:1px solid var(--line); border-radius:12px; padding:clamp(14px,3vh,26px) clamp(10px,1.4vw,20px);
+    text-align:center; display:flex; flex-direction:column; justify-content:center; gap:clamp(5px,1.2vh,10px); min-height:0; }
+  .box.on { border:2px solid var(--primary); background:var(--tint); }
+  .box.off { background:rgba(0,0,0,0.02); }
+  .b-label { font-size:clamp(12px,1.6vh,16px); font-weight:800; color:var(--primary); letter-spacing:0.08em; }
+  .box.off .b-label { color:var(--dim); }
+  .b-main { font-size:clamp(21px,3.8vh,34px); font-weight:900; line-height:1.25; letter-spacing:-0.02em; color:var(--accent); word-break:keep-all; }
+  .box.off .b-main { color:var(--dim); }
+  .b-sub { font-size:clamp(13px,1.9vh,17px); font-weight:600; color:var(--sub); word-break:keep-all; line-height:1.45; }
+
+  /* === 플로우 === */
+  .flow { display:flex; align-items:stretch; }
+  .step { flex:1; border:1px solid var(--line-b); border-radius:12px; background:var(--tint);
+    padding:clamp(14px,3vh,26px) 8px; text-align:center; display:flex; flex-direction:column; justify-content:center; gap:clamp(4px,1vh,8px); }
+  .step .s-n { font-size:clamp(12px,1.7vh,16px); font-weight:800; color:var(--primary); }
+  .step .s-t { font-size:clamp(17px,3vh,26px); font-weight:900; color:var(--accent); letter-spacing:-0.02em; word-break:keep-all; }
+  .step .s-d { font-size:clamp(11px,1.6vh,14px); font-weight:600; color:var(--sub); word-break:keep-all; line-height:1.4; }
+  .arr { display:flex; align-items:center; padding:0 clamp(5px,0.8vw,12px); font-size:clamp(15px,2.4vh,22px); font-weight:800; color:var(--primary); }
+
+  /* === 리스트 === */
+  .list { list-style:none; }
+  .list li { display:flex; align-items:center; gap:clamp(12px,1.6vw,20px);
+    font-size:clamp(18px,3.1vh,27px); font-weight:800; letter-spacing:-0.01em;
+    padding:clamp(8px,1.9vh,17px) 0; border-bottom:1px solid var(--line); word-break:keep-all; }
+  .list li:last-child { border-bottom:none; }
+  .list b { color:var(--primary); }
+  .list small { font-size:clamp(13px,1.9vh,18px); font-weight:600; color:var(--sub); margin-left:auto; text-align:right; }
+  .list .bx { flex:none; width:clamp(18px,3vh,26px); height:clamp(18px,3vh,26px); border:3px solid var(--primary); border-radius:7px; }
+
+  /* === 표지 === */
+  .cover { background:var(--primary); color:#fff; padding-bottom:0; }
+  .cover .c-mid { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:clamp(12px,2.6vh,24px); }
+  .cover .c-kicker { font-size:clamp(14px,2.1vh,20px); font-weight:700; letter-spacing:0.14em; color:rgba(255,255,255,0.75); }
+  .cover h1 { font-size:clamp(56px,12.5vh,104px); font-weight:900; letter-spacing:-0.02em; line-height:1.08; }
+  .cover .c-sub { font-size:clamp(18px,2.9vh,27px); font-weight:700; color:rgba(255,255,255,0.88); }
+  .cover .c-rule { width:clamp(44px,8vw,84px); height:3px; background:rgba(255,255,255,0.5); }
+  .cover .c-lect { font-size:clamp(14px,2.2vh,20px); font-weight:600; color:rgba(255,255,255,0.75); }
+  .cover .c-lect b { color:#fff; font-weight:800; }
+  .cover .c-agenda { flex:none; display:grid; grid-template-columns:repeat(5,1fr); border-top:1px solid rgba(255,255,255,0.25); }
+  .cover .c-agenda div { padding:clamp(12px,2.8vh,24px) 6px; text-align:center; font-size:clamp(13px,2vh,18px); font-weight:700; color:rgba(255,255,255,0.85); border-right:1px solid rgba(255,255,255,0.15); }
+  .cover .c-agenda div:last-child { border-right:none; }
+  .cover .c-agenda span { display:block; font-size:clamp(11px,1.6vh,14px); font-weight:800; color:rgba(255,255,255,0.5); margin-bottom:3px; }
+
+  /* === 타임라인 (강사 소개) === */
+  .tl { position:relative; padding-top:clamp(12px,2.6vh,24px); }
+  .tl-track { position:absolute; left:2%; right:2%; top:calc(50% + clamp(6px,1.3vh,12px)); height:3px; background:var(--tint2); }
+  .tl-row { display:grid; grid-template-columns:repeat(5,1fr); position:relative; }
+  .tl-item { text-align:center; padding:0 6px; }
+  .tl-item .t-era { font-size:clamp(12px,1.7vh,16px); font-weight:800; color:var(--primary); letter-spacing:0.06em; margin-bottom:clamp(4px,1vh,8px); }
+  .tl-item .t-main { font-size:clamp(17px,2.9vh,25px); font-weight:900; color:var(--accent); letter-spacing:-0.02em; line-height:1.3; word-break:keep-all; min-height:clamp(44px,9vh,72px); display:flex; flex-direction:column; justify-content:flex-end; }
+  .tl-item .t-dot { width:clamp(14px,2.4vh,20px); height:clamp(14px,2.4vh,20px); border-radius:50%; background:#fff; border:4px solid var(--primary); margin:clamp(8px,1.8vh,16px) auto; position:relative; z-index:1; }
+  .tl-item:last-child .t-dot { background:var(--primary); }
+  .tl-item .t-sub { font-size:clamp(12px,1.8vh,16px); font-weight:600; color:var(--sub); line-height:1.45; word-break:keep-all; }
+
+  /* === 수식 레이아웃 (좋은 결과물) === */
+  .eq { display:grid; grid-template-columns:1fr auto 1fr auto 1.2fr; align-items:stretch; gap:clamp(8px,1.2vw,18px); }
+  .eq .op { display:flex; align-items:center; font-size:clamp(30px,6vh,52px); font-weight:900; color:var(--primary); }
+  .eq .box.res { border:2px solid var(--primary); background:var(--primary); }
+  .eq .box.res .b-label { color:rgba(255,255,255,0.7); }
+  .eq .box.res .b-main { color:#fff; }
+  .eq .box.res .b-sub { color:rgba(255,255,255,0.8); }
+
+  /* === 파생 트리 (실제 사례) === */
+  .root-box { width:min(56%,520px); margin:0 auto; border:2px solid var(--primary); background:var(--primary); color:#fff;
+    border-radius:12px; text-align:center; padding:clamp(12px,2.4vh,22px); }
+  .root-box .r-l { font-size:clamp(12px,1.7vh,15px); font-weight:800; color:rgba(255,255,255,0.7); letter-spacing:0.1em; margin-bottom:4px; }
+  .root-box .r-m { font-size:clamp(20px,3.6vh,32px); font-weight:900; letter-spacing:-0.02em; }
+  .stem { width:2px; height:clamp(12px,2.6vh,24px); background:var(--line-b); margin:0 auto; }
+  .fork { display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(10px,1.6vw,20px); position:relative; padding-top:clamp(12px,2.6vh,24px); }
+  .fork::before { content:''; position:absolute; top:0; left:12.5%; right:12.5%; height:2px; background:var(--line-b); }
+  .fork .box { position:relative; }
+  .fork .box::before { content:''; position:absolute; top:calc(-1 * clamp(12px,2.6vh,24px)); left:50%; width:2px; height:clamp(12px,2.6vh,24px); background:var(--line-b); }
+
+  /* === 페르소나 필드 === */
+  .pf { display:grid; grid-template-columns:auto 1fr; gap:4px clamp(8px,1vw,14px); text-align:left;
+    font-size:clamp(13px,2vh,17px); font-weight:600; color:var(--sub); margin-top:clamp(4px,1vh,8px); }
+  .pf b { color:var(--primary); font-weight:800; }
+
+  /* === NN 차트 (5명 인터뷰) === */
+  .nn { display:flex; align-items:flex-end; justify-content:center; gap:clamp(14px,2.4vw,30px); height:clamp(120px,26vh,210px); border-bottom:2px solid var(--ink); padding:0 clamp(10px,2vw,24px); }
+  .nn .col { display:flex; flex-direction:column; align-items:center; gap:6px; width:clamp(48px,7vw,84px); height:100%; justify-content:flex-end; }
+  .nn .col .pct { font-size:clamp(13px,2vh,18px); font-weight:800; color:var(--sub); font-variant-numeric:tabular-nums; }
+  .nn .col .stick { width:100%; background:var(--tint2); border-radius:6px 6px 0 0; }
+  .nn .col.hot .stick { background:var(--primary); }
+  .nn .col.hot .pct { color:var(--primary); font-size:clamp(16px,2.6vh,22px); }
+  .nn-x { display:flex; justify-content:center; gap:clamp(14px,2.4vw,30px); padding:6px clamp(10px,2vw,24px) 0; }
+  .nn-x span { width:clamp(48px,7vw,84px); text-align:center; font-size:clamp(12px,1.8vh,16px); font-weight:700; color:var(--sub); }
+  .nn-x span.hot { color:var(--primary); font-weight:900; }
+
+  /* === 변환 다이어그램 (문제 정의) === */
+  .hmw { display:grid; grid-template-columns:1fr auto 1.3fr; align-items:stretch; gap:clamp(8px,1.2vw,18px); }
+  .hmw .arr { flex-direction:column; justify-content:center; gap:2px; }
+  .hmw .arr small { font-size:clamp(11px,1.6vh,14px); font-weight:700; color:var(--sub); }
+
+  /* === 막대 비교 (핵심 경험) === */
+  .cmp { display:grid; grid-template-columns:1fr 1fr; gap:clamp(14px,2.4vw,32px); }
+  .cmp .pane { border:1px solid var(--line); border-radius:12px; padding:clamp(12px,2.4vh,22px); display:flex; flex-direction:column; gap:clamp(6px,1.4vh,12px); }
+  .cmp .pane.on { border:2px solid var(--primary); background:var(--tint); }
+  .cmp .p-t { text-align:center; font-size:clamp(14px,2.1vh,18px); font-weight:800; color:var(--dim); letter-spacing:0.06em; }
+  .cmp .pane.on .p-t { color:var(--primary); }
+  .cmp .chart { display:flex; align-items:flex-end; justify-content:center; gap:clamp(5px,0.8vw,10px); height:clamp(90px,19vh,150px); }
+  .cmp .chart i { display:block; width:clamp(16px,2.4vw,30px); background:rgba(0,0,0,0.18); border-radius:4px 4px 0 0; }
+  .cmp .pane.on .chart i { width:clamp(48px,7vw,90px); background:var(--primary); }
+  .cmp .p-b { text-align:center; font-size:clamp(19px,3.3vh,29px); font-weight:900; color:var(--dim); letter-spacing:-0.02em; }
+  .cmp .pane.on .p-b { color:var(--accent); }
+  .pipe { display:flex; justify-content:center; align-items:center; gap:clamp(8px,1.2vw,16px); }
+  .pipe .chip { border:1px solid var(--line-b); background:var(--tint); border-radius:999px; padding:clamp(6px,1.4vh,12px) clamp(14px,2vw,26px);
+    font-size:clamp(14px,2.2vh,19px); font-weight:800; color:var(--accent); }
+  .pipe .pa { font-size:clamp(14px,2.2vh,19px); font-weight:800; color:var(--primary); }
+
+  /* === 와이어프레임 (진입·조작·확인) === */
+  .wire { border:2px solid var(--ink); border-radius:14px; overflow:hidden; }
+  .wire .w-bar { display:flex; gap:6px; padding:8px 12px; border-bottom:2px solid var(--ink); background:rgba(0,0,0,0.03); }
+  .wire .w-bar i { width:10px; height:10px; border-radius:50%; background:rgba(0,0,0,0.2); }
+  .wire .w-cols { display:grid; grid-template-columns:1fr 1fr 1fr; }
+  .wire .w-col { padding:clamp(10px,2.2vh,20px) clamp(10px,1.4vw,18px); border-right:1px dashed var(--line); display:flex; flex-direction:column; gap:clamp(6px,1.3vh,11px); }
+  .wire .w-col:last-child { border-right:none; }
+  .wire .w-h { font-size:clamp(12px,1.8vh,16px); font-weight:800; color:var(--primary); letter-spacing:0.08em; }
+  .wire .w-big { font-size:clamp(16px,2.7vh,23px); font-weight:900; color:var(--accent); word-break:keep-all; }
+  .wire .w-d { font-size:clamp(12px,1.8vh,16px); font-weight:600; color:var(--sub); line-height:1.45; word-break:keep-all; }
+  .wire .ui-btn { align-self:flex-start; background:var(--primary); color:#fff; border-radius:8px; padding:clamp(5px,1vh,9px) clamp(12px,1.6vw,20px); font-size:clamp(12px,1.8vh,16px); font-weight:800; }
+  .wire .ui-slider { height:6px; background:var(--tint2); border-radius:3px; position:relative; margin:clamp(4px,1vh,8px) 0; }
+  .wire .ui-slider::after { content:''; position:absolute; left:60%; top:50%; transform:translate(-50%,-50%); width:16px; height:16px; border-radius:50%; background:var(--primary); }
+  .wire .ui-line { height:8px; border-radius:4px; background:rgba(0,0,0,0.08); }
+  .wire .ui-line.short { width:70%; }
+
+  /* === 프롬프트 블록 === */
+  .code { background:#1d2939; color:#e6edf6; border-radius:12px; padding:clamp(12px,2.4vh,22px) clamp(14px,1.8vw,24px);
+    font-size:clamp(14px,2.2vh,19px); line-height:1.65; font-weight:500; word-break:keep-all; height:100%; }
+  .code .c-l { display:block; font-size:clamp(10px,1.5vh,13px); font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:#8fb4e8; margin-bottom:clamp(6px,1.2vh,10px); }
+  .code.mute { background:#3a3f47; color:rgba(255,255,255,0.75); }
+  .code b { color:#9ecbff; font-weight:800; }
+
+  /* === 루프 다이어그램 === */
+  .loop-note { text-align:center; font-size:clamp(13px,2vh,17px); font-weight:700; color:var(--sub); }
+  .loop-note b { color:var(--primary); }
+
+  /* === 바퀴 (요약) === */
+  .wheel-wrap { display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,3.4vw,48px); align-items:center; }
+  .wheel { position:relative; width:clamp(220px,40vh,320px); height:clamp(220px,40vh,320px); margin:0 auto; }
+  .wheel .ring { position:absolute; inset:clamp(28px,5vh,40px); border:3px dashed var(--line-b); border-radius:50%; }
+  .wheel .hub { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); text-align:center;
+    font-size:clamp(14px,2.3vh,19px); font-weight:900; color:var(--primary); line-height:1.3; }
+  .wheel .node { position:absolute; width:clamp(64px,11vh,86px); height:clamp(64px,11vh,86px); border-radius:50%;
+    background:var(--primary); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:clamp(11px,1.7vh,14px); font-weight:800; text-align:center; line-height:1.2; transform:translate(-50%,-50%); }
+  .wheel .node i { font-style:normal; font-size:clamp(13px,2vh,17px); font-weight:900; }
+  .wheel-side .list li { font-size:clamp(17px,2.9vh,25px); padding:clamp(7px,1.6vh,14px) 0; }
+
+  /* === 배점 바 === */
+  .bars { display:flex; flex-direction:column; gap:clamp(10px,2.4vh,22px); }
+  .bar { display:grid; grid-template-columns:minmax(200px,28%) 1fr clamp(44px,6vw,72px); align-items:center; gap:clamp(12px,2vw,26px); }
+  .bar .l { font-size:clamp(17px,2.9vh,26px); font-weight:900; letter-spacing:-0.02em; }
+  .bar .l small { font-size:clamp(11px,1.7vh,16px); font-weight:700; color:var(--primary); margin-left:8px; }
+  .bar .t { height:clamp(18px,3.9vh,34px); background:var(--tint); border-radius:8px; overflow:hidden; }
+  .bar .f { height:100%; background:var(--primary); border-radius:8px; }
+  .bar .f.mid { background:rgba(30,86,160,0.65); }
+  .bar .v { font-size:clamp(18px,3.4vh,30px); font-weight:900; color:var(--primary); text-align:right; font-variant-numeric:tabular-nums; }
+  .bracket { border:1px solid var(--line-b); background:var(--tint); border-radius:10px; padding:clamp(8px,1.8vh,16px);
+    text-align:center; font-size:clamp(14px,2.2vh,19px); font-weight:800; color:var(--accent); }
+  .bracket b { color:var(--primary); }
+
+  /* === 제출물 카드 === */
+  .sub-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(10px,1.6vw,20px); }
+  .sub-card { border:1px solid var(--line); border-radius:12px; padding:clamp(12px,2.4vh,22px) clamp(14px,1.8vw,24px); display:flex; gap:clamp(12px,1.6vw,20px); align-items:center; }
+  .sub-card .n { flex:none; width:clamp(38px,6.4vh,52px); height:clamp(38px,6.4vh,52px); border-radius:50%; background:var(--primary); color:#fff;
+    display:grid; place-items:center; font-size:clamp(17px,2.9vh,24px); font-weight:900; }
+  .sub-card .t { font-size:clamp(18px,3.1vh,27px); font-weight:900; color:var(--accent); letter-spacing:-0.02em; }
+  .sub-card .d { font-size:clamp(12px,1.9vh,16px); font-weight:600; color:var(--sub); margin-top:2px; word-break:keep-all; }
+  .warn { border:2px solid #C0392B; background:rgba(192,57,43,0.06); border-radius:12px; padding:clamp(10px,2.2vh,20px);
+    text-align:center; font-size:clamp(17px,3vh,26px); font-weight:900; color:#C0392B; letter-spacing:-0.01em; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+
+  @media print {
+    body { background:#fff; }
+    .slide { box-shadow:none; page-break-after:always; page-break-inside:avoid; }
+    .slide:last-child { page-break-after:auto; }
+  }
+  @page { size: 1280px 720px; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- 1. 표지 -->
+<div class="slide cover">
+  <div class="c-mid">
+    <div class="c-kicker">기상·기후 AI 활용 해커톤 · 본선 진출 15팀 교육 세션</div>
+    <h1>서비스 개발</h1>
+    <div class="c-sub">사용자에서 시작하는 다섯 단계</div>
+    <div class="c-rule"></div>
+    <div class="c-lect"><b>김영욱</b></div>
+  </div>
+  <div class="c-agenda">
+    <div><span>STEP 1</span>사용자</div>
+    <div><span>STEP 2</span>문제 정의</div>
+    <div><span>STEP 3</span>핵심 경험</div>
+    <div><span>STEP 4</span>체험·개발</div>
+    <div><span>STEP 5</span>검증</div>
+  </div>
+</div>
+
+<!-- 2. 강사 소개: 커리어 타임라인 -->
+<div class="slide">
+  <div class="head"><div class="tag">Intro</div><div class="no">2 / 18</div></div>
+  <div class="title">강사 소개 — <b>김영욱</b> <span style="font-size:0.55em; font-weight:700; color:var(--sub);">AIoIA 공동대표 · CTO</span></div>
+  <div class="body">
+    <div class="tl">
+      <div class="tl-track"></div>
+      <div class="tl-row">
+        <div class="tl-item"><div class="t-era">시작</div><div class="t-main">KAIST<br>전산학 석사</div><div class="t-dot"></div><div class="t-sub">머신러닝·강화학습<br>AI 15년 경력</div></div>
+        <div class="tl-item"><div class="t-era">네이버</div><div class="t-main">P2P 스트리밍<br>특허 3건</div><div class="t-dot"></div><div class="t-sub">미국 · 일본 · 한국</div></div>
+        <div class="tl-item"><div class="t-era">스캐터랩</div><div class="t-main">대화 AI<br>핑퐁</div><div class="t-dot"></div><div class="t-sub">이루다 전신</div></div>
+        <div class="tl-item"><div class="t-era">알고리마 CEO</div><div class="t-main">AI 교육 플랫폼<br>연매출 약 10억</div><div class="t-dot"></div><div class="t-sub">중기부 AI Championship 우승</div></div>
+        <div class="tl-item"><div class="t-era">지금 · AIoIA</div><div class="t-main">Claude Code로<br>매일 서비스 제작</div><div class="t-dot"></div><div class="t-sub">이 해커톤 데모도 직접 제작</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="punch">오늘 이야기는 이론이 아니라, 매일 쓰는 방법<small>이 해커톤의 데모를 만든 과정 그대로</small></div>
+</div>
+
+<!-- 3. 좋은 결과물: 수식 -->
+<div class="slide">
+  <div class="head"><div class="tag">시작하기 전에</div><div class="no">3 / 18</div></div>
+  <div class="title">무엇이 <b>좋은 결과물</b>을 만드는가</div>
+  <div class="body">
+    <div class="eq">
+      <div class="box on"><div class="b-label">핵심 1</div><div class="b-main">끝까지<br>동작</div><div class="b-sub">완성되어 작동하는 하나</div></div>
+      <div class="op">×</div>
+      <div class="box on"><div class="b-label">핵심 2</div><div class="b-main">직접<br>경험</div><div class="b-sub">조작하며 배우는 화면</div></div>
+      <div class="op">=</div>
+      <div class="box res"><div class="b-label">결과</div><div class="b-main">좋은<br>결과물</div><div class="b-sub">둘 중 하나가 0이면 결과도 0</div></div>
+    </div>
+  </div>
+  <div class="punch">오늘 강의 — 이 두 가지를 만드는 다섯 단계 개발 순서<small>두 기준 = 심사 배점 상위 2개 항목: 실현 가능성 30 + 체험·참여형 설계 25 (기상·기후 AI 해커톤 2026 공고문, 2026.6.8)</small></div>
+</div>
+
+<!-- 4. 로드맵 -->
+<div class="slide">
+  <div class="head"><div class="tag">Roadmap</div><div class="no">4 / 18</div></div>
+  <div class="title">공통 질문 — <b>"사용자를 알고 만들었는가"</b></div>
+  <div class="body">
+    <div class="flow">
+      <div class="step"><div class="s-n">1</div><div class="s-t">사용자</div><div class="s-d">누가 쓰는지부터</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="s-n">2</div><div class="s-t">문제 정의</div><div class="s-d">불편을 한 문장으로</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="s-n">3</div><div class="s-t">핵심 경험</div><div class="s-d">하나만, 끝까지</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="s-n">4</div><div class="s-t">체험·개발</div><div class="s-d">읽기 말고 조작</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="s-n">5</div><div class="s-t">검증</div><div class="s-d">동료가 첫 사용자</div></div>
+    </div>
+  </div>
+  <div class="punch">단계별 산출물 — 페르소나 · HMW 질문 · 핵심 경험 1개 · 동작하는 URL · 동료 테스트 기록</div>
+</div>
+
+<!-- 5. 실제 사례: 파생 트리 -->
+<div class="slide">
+  <div class="head"><div class="tag">실제 사례</div><div class="no">5 / 18</div></div>
+  <div class="title">타겟이 정해지자, <b>나머지가 전부 정해졌다</b></div>
+  <div class="body">
+    <div>
+      <div class="root-box"><div class="r-l">먼저 정한 것</div><div class="r-m">타겟 · 학습 목표 · 평가 기준</div></div>
+      <div class="stem"></div>
+      <div class="fork">
+        <div class="box"><div class="b-label">주제</div><div class="b-main" style="font-size:clamp(17px,3vh,26px);">대피 시간<br>벌기</div></div>
+        <div class="box"><div class="b-label">형식</div><div class="b-main" style="font-size:clamp(17px,3vh,26px);">시간 제약<br>게임</div></div>
+        <div class="box"><div class="b-label">데이터</div><div class="b-main" style="font-size:clamp(17px,3vh,26px);">실측<br>기상 데이터</div></div>
+        <div class="box"><div class="b-label">난이도</div><div class="b-main" style="font-size:clamp(17px,3vh,26px);">첫 화면에서<br>검증</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="punch">취향이 아니라 타겟과 목표에서 도출<small>저희 데모 팀의 실화 — 기준을 정하자 겉돌던 회의가 풀렸다</small></div>
+</div>
+
+<!-- 6. 사용자: 페르소나 비교 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 1 · 사용자</div><div class="no">6 / 18</div></div>
+  <div class="title">여러분의 사용자는 <b>누구입니까</b></div>
+  <div class="body">
+    <div class="row c2">
+      <div class="box off">
+        <div class="b-label">✗ 인구통계</div>
+        <div class="b-main">"20~50대<br>기상청 직원"</div>
+        <div class="b-sub">화면 하나도 결정 못 함</div>
+      </div>
+      <div class="box on">
+        <div class="b-label">✓ 페르소나</div>
+        <div class="b-main">"김 주무관, 입청 1년차"</div>
+        <div class="pf">
+          <b>상황</b><span>집합교육 중, 오후 실습 예정</span>
+          <b>목표</b><span>태풍 예측이 왜 매번 달라지는지 알고 싶다</span>
+          <b>불편</b><span>수식 설명은 머리에 안 남는다</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="punch">페르소나 = 팀의 의사결정 도구<small>"김 주무관이 이걸 보면 바로 이해할까?" — 아니면 뺀다</small></div>
+</div>
+
+<!-- 7. 지식의 저주 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 1 · 사용자</div><div class="no">7 / 18</div></div>
+  <div class="title">함정 — <b>"내가 곧 사용자다"</b></div>
+  <div class="body">
+    <div class="hmw" style="grid-template-columns:1fr auto 1fr;">
+      <div class="box off"><div class="b-label">전문가에게는</div><div class="b-main">"850hPa 일기도"</div><div class="b-sub">매일 쓰는 일상 용어</div></div>
+      <div class="arr" style="flex-direction:column;"><span>→</span><small style="font-size:clamp(11px,1.7vh,14px); font-weight:800; color:var(--primary);">지식의 저주</small></div>
+      <div class="box on"><div class="b-label">교육생에게는</div><div class="b-main">암호</div><div class="b-sub">첫 화면에서 이탈하는 원인</div></div>
+    </div>
+    <div class="loop-note">한번 알고 나면, 모르던 때의 막막함을 다시 떠올리지 못한다</div>
+  </div>
+  <div class="punch">"다 알겠지" 확신이 들수록, 만들기 전에 물어보기<small>지식의 저주 — Camerer, Loewenstein &amp; Weber (1989), Journal of Political Economy</small></div>
+</div>
+
+<!-- 8. 5명 인터뷰: NN 차트 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 1 · 사용자</div><div class="no">8 / 18</div></div>
+  <div class="title">사용자는 옆자리에, <b>5명이면 충분</b></div>
+  <div class="body">
+    <div style="display:grid; grid-template-columns:1.1fr 1fr; gap:clamp(16px,2.6vw,36px); align-items:center;">
+      <div>
+        <div class="nn">
+          <div class="col"><span class="pct">31%</span><i class="stick" style="height:31%;"></i></div>
+          <div class="col"><span class="pct">52%</span><i class="stick" style="height:52%;"></i></div>
+          <div class="col"><span class="pct">67%</span><i class="stick" style="height:67%;"></i></div>
+          <div class="col"><span class="pct">77%</span><i class="stick" style="height:77%;"></i></div>
+          <div class="col hot"><span class="pct">85%</span><i class="stick" style="height:85%;"></i></div>
+        </div>
+        <div class="nn-x"><span>1명</span><span>2명</span><span>3명</span><span>4명</span><span class="hot">5명</span></div>
+        <div class="loop-note" style="margin-top:8px;">사용성 문제 발견율 — Nielsen Norman Group (2000)</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:clamp(8px,1.6vh,14px);">
+        <div class="box" style="text-align:left; align-items:flex-start;"><div class="b-label">질문 1</div><div class="b-main" style="font-size:clamp(17px,2.9vh,24px);">"가장 지루했거나 어려웠던 순간은?"</div></div>
+        <div class="box" style="text-align:left; align-items:flex-start;"><div class="b-label">질문 2</div><div class="b-main" style="font-size:clamp(17px,2.9vh,24px);">"그때 어떻게 해결했나?"</div></div>
+        <div class="box" style="text-align:left; align-items:flex-start;"><div class="b-label">질문 3</div><div class="b-main" style="font-size:clamp(17px,2.9vh,24px);">"처음 배울 때 뭐가 막막했나?"</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="punch">미래의 의향 ✗ &nbsp;과거의 경험 ○<small>"이런 기능 있으면 쓰실 건가요?"는 금지 — Rob Fitzpatrick, 『The Mom Test』 (2013)</small></div>
+</div>
+
+<!-- 9. 문제 정의: 변환 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 2 · 문제 정의</div><div class="no">9 / 18</div></div>
+  <div class="title">불편을 <b>한 문장의 질문</b>으로</div>
+  <div class="body">
+    <div class="hmw">
+      <div class="box off"><div class="b-label">인터뷰에서 들은 불편</div><div class="b-main" style="font-size:clamp(16px,2.8vh,24px); font-weight:800;">"앙상블을 수식으로만 배워서<br>감이 안 와요"</div></div>
+      <div class="arr" style="flex-direction:column;"><span>→</span><small style="font-size:clamp(11px,1.7vh,14px); font-weight:800; color:var(--primary);">HMW</small></div>
+      <div class="box on"><div class="b-label">문제 정의 (How Might We)</div><div class="b-main" style="font-size:clamp(16px,2.8vh,24px); font-weight:800;">"어떻게 하면 교육생이 불확실성을<br>직접 조작하며 체감하게 할까?"</div></div>
+    </div>
+    <div class="row c2">
+      <div class="box"><div class="b-main" style="font-size:clamp(17px,2.9vh,25px);">① 주어는 언제나 사용자</div></div>
+      <div class="box"><div class="b-main" style="font-size:clamp(17px,2.9vh,25px);">② 해결책을 미리 정하지 않기</div></div>
+    </div>
+  </div>
+  <div class="punch" style="font-size:clamp(13px,2vh,17px); font-weight:600; color:var(--dim);">How Might We — Min Basadur(P&G) 고안, IDEO 디자인 씽킹 프로세스로 확산</div>
+</div>
+
+<!-- 10. 핵심 경험: 막대 비교 + 파이프라인 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 3 · 핵심 경험</div><div class="no">10 / 18</div></div>
+  <div class="title">적은 실력 부족이 아니라 <b>기능 욕심</b></div>
+  <div class="body">
+    <div class="cmp">
+      <div class="pane">
+        <div class="p-t">떨어지는 팀 (예시)</div>
+        <div class="chart"><i style="height:60%"></i><i style="height:55%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:58%"></i><i style="height:52%"></i><i style="height:60%"></i></div>
+        <div class="p-b">기능 7개 × 60%</div>
+      </div>
+      <div class="pane on">
+        <div class="p-t">붙는 팀 (예시)</div>
+        <div class="chart"><i style="height:100%"></i></div>
+        <div class="p-b">기능 1개 × 100%</div>
+      </div>
+    </div>
+    <div class="pipe">
+      <span class="chip">기상 데이터</span><span class="pa">→</span>
+      <span class="chip">AI · 분석</span><span class="pa">→</span>
+      <span class="chip">체험 UX</span>
+    </div>
+  </div>
+  <div class="punch">'기능 1개' = 끊기지 않는 한 줄기<small>화면 하나가 아니라, 데이터부터 체험까지 이어져야 한다 · Eric Ries, The Lean Startup (2011) — 수치는 통계가 아니라 예시</small></div>
+</div>
+
+<!-- 11. 진입·조작·확인: 와이어프레임 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 4 · 체험 설계</div><div class="no">11 / 18</div></div>
+  <div class="title">조작하지 않으면 <b>배우지 않는다</b></div>
+  <div class="body">
+    <div class="wire">
+      <div class="w-bar"><i></i><i></i><i></i></div>
+      <div class="w-cols">
+        <div class="w-col">
+          <div class="w-h">① 진입 — 첫 10초</div>
+          <div class="w-big">뭘 누르면 되는지<br>바로 보인다</div>
+          <div class="ui-btn">앙상블 실행</div>
+          <div class="w-d">긴 설명문이 먼저 나오면 실패</div>
+        </div>
+        <div class="w-col">
+          <div class="w-h">② 조작 — 직접 만진다</div>
+          <div class="w-big">슬라이더 · 지도 ·<br>시나리오 선택</div>
+          <div class="ui-slider"></div>
+          <div class="w-d">보기만 하는 차트·영상은 자료다</div>
+        </div>
+        <div class="w-col">
+          <div class="w-h">③ 확인 — 배움의 실감</div>
+          <div class="w-big">"방금 뭘 배웠는지"<br>한 문장으로</div>
+          <div class="ui-line"></div>
+          <div class="ui-line short"></div>
+          <div class="w-d">"그래서 뭘 배웠지?"로 끝나면 실패</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="punch">설명 세 문단보다, 버튼 한 번에 퍼지는 진로 50개</div>
+</div>
+
+<!-- 12. 프롬프트 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 4 · 개발</div><div class="no">12 / 18</div></div>
+  <div class="title">프롬프트에 <b>사용자부터</b></div>
+  <div class="body">
+    <div class="row c2" style="align-items:stretch;">
+      <div class="code mute"><span class="c-l">✗ 기능만</span>태풍 정보 웹페이지 만들어줘</div>
+      <div class="code"><span class="c-l">✓ 사용자부터</span><b>신입 예보관 교육생</b>이 태풍 앙상블의 불확실성을 체험하는 페이지를 만들어줘. <b>기상 지식은 있지만 수치예보는 처음</b>이야. (1) 지도에서 태풍 위치를 드래그하고 (2) '앙상블 실행'을 누르면 진로 50개가 퍼지고 (3) 결과를 한 문장으로 요약해줘.</div>
+    </div>
+  </div>
+  <div class="punch">페르소나가 들어가면 어투·난이도·설명량이 전부 달라진다<small>STEP 1~3 = 최고의 프롬프트 재료</small></div>
+</div>
+
+<!-- 13. 만들기 루프 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 4 · 개발</div><div class="no">13 / 18</div></div>
+  <div class="title">작게 만들고, <b>사용자의 눈으로</b></div>
+  <div class="body">
+    <div class="flow">
+      <div class="step"><div class="s-n">1</div><div class="s-t">작게 요청</div><div class="s-d">한 번에 한 가지</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="s-n">2</div><div class="s-t">사용자 눈으로</div><div class="s-d">"김 주무관이 뭘 누를지 알까?"</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="s-n">3</div><div class="s-t">구체적 수정</div><div class="s-d">무엇이 왜 문제인지</div></div>
+      <div class="arr" style="font-size:clamp(12px,1.9vh,17px);">반복</div>
+    </div>
+    <div class="row c2">
+      <div class="box off"><div class="b-label">✗ 모호한 요청</div><div class="b-main" style="font-size:clamp(16px,2.7vh,23px); font-weight:800;">"더 좋게 만들어줘"</div></div>
+      <div class="box on"><div class="b-label">✓ 사용자 관점</div><div class="b-main" style="font-size:clamp(16px,2.7vh,23px); font-weight:800;">"교육생은 '앙상블'을 몰라.<br>버튼 옆에 한 줄 설명 붙여줘"</div></div>
+    </div>
+  </div>
+  <div class="punch">자주 배포할 것<small>내 화면과 심사위원이 여는 URL은 다르다</small></div>
+</div>
+
+<!-- 14. 동료 검증 -->
+<div class="slide">
+  <div class="head"><div class="tag">STEP 5 · 검증</div><div class="no">14 / 18</div></div>
+  <div class="title">심사장 리허설 — <b>동료가 첫 사용자</b></div>
+  <div class="body">
+    <div class="row c3">
+      <div class="box"><div class="b-label">규칙 1</div><div class="b-main">설명 금지</div><div class="b-sub">링크만 준다 — 입이 근질거리는 곳이 고칠 곳</div></div>
+      <div class="box"><div class="b-label">규칙 2</div><div class="b-main">돕지 말고<br>관찰</div><div class="b-sub">어디서 멈칫하는지가 수정 우선순위</div></div>
+      <div class="box"><div class="b-label">규칙 3</div><div class="b-main">"뭘<br>배웠어요?"</div><div class="b-sub">의도한 배움과 일치하면 검증 완료</div></div>
+    </div>
+    <div class="pipe">
+      <span class="chip">5분 테스트</span><span class="pa">→</span>
+      <span class="chip">공통 문제 1~2개만 수정</span><span class="pa">→</span>
+      <span class="chip">다시 5분 테스트</span>
+    </div>
+  </div>
+  <div class="punch">덜 만들어졌을 때 보여주는 것이 진짜 검증</div>
+</div>
+
+<!-- 15. 요약: 바퀴 -->
+<div class="slide">
+  <div class="head"><div class="tag">Summary</div><div class="no">15 / 18</div></div>
+  <div class="title">다섯 단계는 절차가 아니라 <b>바퀴</b></div>
+  <div class="body">
+    <div class="wheel-wrap">
+      <div class="wheel">
+        <div class="ring"></div>
+        <div class="hub">한 바퀴<br>더</div>
+        <div class="node" style="left:50%; top:0%;"><i>1</i>사용자</div>
+        <div class="node" style="left:97%; top:36%;"><i>2</i>문제</div>
+        <div class="node" style="left:79%; top:93%;"><i>3</i>핵심</div>
+        <div class="node" style="left:21%; top:93%;"><i>4</i>개발</div>
+        <div class="node" style="left:3%; top:36%;"><i>5</i>검증</div>
+      </div>
+      <div class="wheel-side">
+        <ul class="list">
+          <li><b>1 사용자</b><small>동료 5명, 과거 경험을 묻는다</small></li>
+          <li><b>2 문제 정의</b><small>HMW 한 문장</small></li>
+          <li><b>3 핵심 경험</b><small>1개 × 100%</small></li>
+          <li><b>4 체험·개발</b><small>진입·조작·확인 + 페르소나 프롬프트</small></li>
+          <li><b>5 검증</b><small>설명 없이 동료 테스트</small></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="punch">사전개발 기간 7.23 ~ 8.20 — 이 바퀴를 여러 번 돌릴 수 있는 시간</div>
+</div>
+
+<!-- 16. 심사 기준 -->
+<div class="slide">
+  <div class="head"><div class="tag">심사 기준</div><div class="no">16 / 18</div></div>
+  <div class="title">심사 기준은 <b>5단계를 돌면 채워진다</b></div>
+  <div class="body">
+    <div class="bars">
+      <div class="bar"><div class="l">실현 가능성<small>STEP 3–5</small></div><div class="t"><div class="f" style="width:100%;"></div></div><div class="v">30</div></div>
+      <div class="bar"><div class="l">체험·참여형<small>STEP 4</small></div><div class="t"><div class="f" style="width:83%;"></div></div><div class="v">25</div></div>
+      <div class="bar"><div class="l">주제 적합성<small>STEP 1–2</small></div><div class="t"><div class="f mid" style="width:67%;"></div></div><div class="v">20</div></div>
+      <div class="bar"><div class="l">독창성<small>STEP 1–2</small></div><div class="t"><div class="f mid" style="width:50%;"></div></div><div class="v">15</div></div>
+      <div class="bar"><div class="l">학습 효과<small>STEP 2·5</small></div><div class="t"><div class="f mid" style="width:33%;"></div></div><div class="v">10</div></div>
+    </div>
+    <div class="bracket">배점의 절반 이상, <b>실현 가능성 30 + 체험·참여형 25 = 55점</b>이 STEP 3~5에서 결정된다</div>
+    <div class="loop-note" style="margin-top:8px; font-weight:600;">심사 항목·배점 출처: 기상·기후 AI 해커톤 2026 공고문(2026.6.8) — 서류·본선 동일 5개 항목, 100점 만점</div>
+  </div>
+</div>
+
+<!-- 17. 최종 제출물 -->
+<div class="slide">
+  <div class="head"><div class="tag">최종 제출물</div><div class="no">17 / 18</div></div>
+  <div class="title">최종 제출물 <b>4가지</b></div>
+  <div class="body">
+    <div class="sub-grid">
+      <div class="sub-card"><div class="n">1</div><div><div class="t">구동 URL</div><div class="d">로그인·결제 없이 크롬에서 바로 조작</div></div></div>
+      <div class="sub-card"><div class="n">2</div><div><div class="t">소스 코드 zip</div><div class="d">구글 폼 업로드 · node_modules 제외</div></div></div>
+      <div class="sub-card"><div class="n">3</div><div><div class="t">프롬프트 세션</div><div class="d">AI 활용 증빙 · .md/.txt 내보내기</div></div></div>
+      <div class="sub-card"><div class="n">4</div><div><div class="t">README</div><div class="d">실행 방법 + 데이터·폰트·이미지 출처</div></div></div>
+    </div>
+    <div class="warn">API 키 노출 = 실격</div>
+  </div>
+</div>
+
+<!-- 18. 마무리 -->
+<div class="slide">
+  <div class="head"><div class="tag">Checklist</div><div class="no">18 / 18</div></div>
+  <div class="title">우리 팀 <b>점검 리스트</b></div>
+  <div class="body">
+    <ul class="list">
+      <li><span class="bx"></span>사용자를 <b>한 문장</b>으로<small>상황 · 목표 · 불편 포함</small></li>
+      <li><span class="bx"></span>문제 정의는 <b>HMW 질문 한 문장</b></li>
+      <li><span class="bx"></span>핵심 경험은 <b>하나</b><small>버린 기능 목록도 있다</small></li>
+      <li><span class="bx"></span><b>페르소나가 프롬프트에</b></li>
+      <li><span class="bx"></span>동료 1명이 <b>설명 없이</b> 끝까지</li>
+    </ul>
+  </div>
+  <div class="punch">질문 있으시면 편하게 말씀해주세요</div>
+</div>
+
+</body>
+</html>
