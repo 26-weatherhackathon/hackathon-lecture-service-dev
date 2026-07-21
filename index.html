@@ -677,16 +677,27 @@
   <div class="sec-tag">개발계획서 · 운영진 데모 실물</div>
   <div class="sec-title">계획서의 문장이 <b>화면의 기능</b>이 된 실제 예</div>
 
-  <div class="lead" style="font-size:18px; margin-bottom:12px; padding:12px 20px;">운영진 데모 「우리 마을 홍수 방재 게임」 — 개발계획서(PLAN.md)의 <b>교육 효과·로직·디자인</b>이 화면에 구현된 대응.</div>
+  <div class="lead" style="font-size:16px; margin-bottom:6px; padding:8px 20px;">운영진 데모 「우리 마을 홍수 방재 게임」 — 개발계획서(PLAN.md)의 <b>교육 효과·로직·디자인</b>이 화면에 구현된 대응.</div>
 
-  <table style="margin-top:6px;">
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:6px;">
+    <div style="text-align:center;">
+      <img src="screenshots/demo/prep-stage.png" alt="대비 단계 — DEM 지형 위에 방재 시설 배치 화면" style="width:100%; height:95px; object-fit:cover; object-position:top; border-radius:8px; border:1px solid var(--border);">
+      <div style="font-size:12.5px; color:var(--dim); margin-top:4px;">대비 단계 — 시설 배치 화면 (실제 캡처)</div>
+    </div>
+    <div style="text-align:center;">
+      <img src="screenshots/demo/result.png" alt="결과 화면 — 마을이 잠겼어요, 별점과 침수 건물 수 표시" style="width:100%; height:95px; object-fit:cover; object-position:top; border-radius:8px; border:1px solid var(--border);">
+      <div style="font-size:12.5px; color:var(--dim); margin-top:4px;">결과 화면 — 별점·침수 건물 수 (실제 캡처)</div>
+    </div>
+  </div>
+
+  <table style="margin-top:4px; font-size:14px;">
     <tr><th style="width:15%;">고려한 것</th><th style="width:44%;">계획서(PLAN.md)에 쓴 것</th><th>실제 데모 화면에서</th></tr>
     <tr><td>교육 효과</td><td>Piaget 구체적 조작기 — 시간 제한 없음, 누적 점수 없이 별점(★ 0~3)·예산은 학습 제약</td><td>무제한 배치 탐색 + 침수 건물 수·별점(★)·예산 표시</td></tr>
     <tr><td>로직</td><td>침수 판정 한 줄 — (고도+시설) &lt; 수위 − 0.3m</td><td>실측 DEM 고도가 게임 엔진으로 동작</td></tr>
     <tr><td>디자인</td><td>지형색(자연색)·신호색(신호등) 색상 축 분리 + 색약 아이콘 병기</td><td>지형색·안전색 축 분리 구현 — 색약 아이콘·3색 신호는 후속 구현 과제</td></tr>
   </table>
 
-  <div class="highlight-box" style="margin-top:10px; padding:16px 24px;">
+  <div class="highlight-box" style="margin-top:6px; padding:8px 24px;">
     <div class="hb-big" style="font-size:23px;">계획서의 한 문장마다 "화면 어디에 있는가"에 답할 수 있을 것</div>
     <div style="font-size:13.5px; color:var(--dim); margin-top:8px;">계획과 달라진 것은 계획서를 갱신해 이력으로 남겼다(PLAN.md 부록 A) · 데모는 운영진 예시로, 본선 팀 아이디어와 무관</div>
   </div>
